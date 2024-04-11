@@ -41,15 +41,15 @@ public class EasyGame extends BasicGame {
 
     @Override
     public void init(GameContainer container) throws SlickException {
-        background = new Image("assets/pics/background1.jpg");
+        background = new Image("assets/pics/backg.jpg");
         steinList = new ArrayList<>();
         sternList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            steinList.add(new Stein(100, 100, new Image("assets/pics/stein_50.png")));
-            sternList.add(new Stern(100, 100, new Image("assets/pics/stern_50.png")));
+            steinList.add(new Stein(100, 100, new Image("assets/pics/star_50.png")));
+            sternList.add(new Stern(100, 100, new Image("assets/pics/komet_50.png")));
 
         }
-        player = new Player(500, 700, new Image("assets/pics/player_250.png"), container.getInput());
+        player = new Player(500, 700, new Image("assets/animation/Runner_New.gif"), container.getInput());
         music = new Music("testdata/kirby.ogg");
         music.loop();
         music.setVolume(1);
