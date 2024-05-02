@@ -1,8 +1,7 @@
 package at.gca.game.easygame;
 
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
+import org.newdawn.slick.*;
+import org.newdawn.slick.Animation;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 
@@ -13,11 +12,34 @@ public class Player extends SpielObjekt{
 
     private float speed =1f;
     private float acceleration = 5f;
+    private Animation animation;
+    private boolean jump=false;
 
-    public Player(int x, int y, Image image, Input input) {
+    public Player(int x, int y, Image image, Input input) throws SlickException {
         super(x, y, image);
         this.input= input;
         shape = new Rectangle(x,y, image.getWidth(), image.getHeight());
+        animation = new Animation();
+
+        PackedSpriteSheet pss = new PackedSpriteSheet("assets/animation/texture.txr");
+        animation.addFrame(pss.getSprite("01.gif"),100);
+        animation.addFrame(pss.getSprite("02.gif"),100);
+        for (int i=5;i<=13;i++){
+            if (i<=9)
+             animation.addFrame(pss.getSprite("0"+i+".gif"),100);
+            else
+                animation.addFrame(pss.getSprite(i+".gif"),100);
+        }
+
+
+    }
+
+    public Animation getAnimation() {
+        return animation;
+    }
+
+    public void setAnimation(Animation animation) {
+        this.animation = animation;
     }
 
     @Override
@@ -27,11 +49,24 @@ public class Player extends SpielObjekt{
 
     @Override
     public void draw(Graphics g) {
-        this.getImage().drawCentered(this.getX(),this.getY());
+        if (jump) {
+            this.getImage().drawCentered(this.getX(),this.getY());
+        } else {
+            animation.draw(this.getX(),this.getY()-50);
+        }
+
+
+
+
     }
 
     @Override
     public void update(int delta) {
+        if (jump) {
+            this.setY(this.getY()+7);
+        }
+
+        if (this.getY() >  700) jump = false;
         int olddirection = this.direction;
         this.speed += acceleration;
         if(input.isKeyDown(Input.KEY_A)){
@@ -47,6 +82,12 @@ public class Player extends SpielObjekt{
             if (this.getY()>(1024-(this.getWidth()/2)))
                 this.setY(1024-(this.getWidth()/2));
             direction = 1;
+        }
+        if (input.isKeyDown(Input.KEY_SPACE)) {
+            if (jump == false) {
+                jump = true;
+                this.setY(this.getY()-150);
+            }
         }
         if (this.direction == olddirection){
             speed += acceleration;
