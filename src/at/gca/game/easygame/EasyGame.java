@@ -12,6 +12,7 @@ public class EasyGame extends BasicGame {
     private Image background;
     private ArrayList<Stein> steinList;
     private ArrayList<Stern> sternList;
+    private ArrayList<Wolke> wolkeList;
     private Player player;
 
     private Sound sound;
@@ -44,11 +45,13 @@ public class EasyGame extends BasicGame {
         background = new Image("assets/pics/backg.jpg");
         steinList = new ArrayList<>();
         sternList = new ArrayList<>();
+        wolkeList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            steinList.add(new Stein(100, 100, new Image("assets/pics/star_50.png")));
-            sternList.add(new Stern(100, 100, new Image("assets/pics/komet_50.png")));
-
+            if (i< 2) steinList.add(new Stein(100, 100, new Image("assets/pics/komet_50.png")));
+            if (i < 5 ) sternList.add(new Stern(100, 100, new Image("assets/pics/star_50.png")));
+            if (i<2) wolkeList.add(new Wolke(100, 100, new Image("assets/pics/wolke_250.png")));
         }
+
         player = new Player(500, 700, new Image("assets/animation/Runner_New.gif"), container.getInput());
         music = new Music("testdata/kirby.ogg");
         music.loop();
@@ -107,6 +110,19 @@ public class EasyGame extends BasicGame {
                 }
                 u.update(delta);
             }
+            for (Wolke u : wolkeList) {
+                if (player.intersects(u.getShape())) {
+                    sound.play();
+                    hits++;
+                    u.setRandomPosition();
+                }
+                if (u.getY() >  768) {
+                    miss++;
+                    u.update(delta);
+                    u.setRandomPosition();
+                }
+                u.update(delta);
+            }
         }
 
         @Override
@@ -117,6 +133,9 @@ public class EasyGame extends BasicGame {
                 u.draw(g);
             }
             for (Stern u : sternList) {
+                u.draw(g);
+            }
+            for (Wolke u : wolkeList) {
                 u.draw(g);
             }
             font.drawString(10, 5, "Hit" + hits, Color.black);

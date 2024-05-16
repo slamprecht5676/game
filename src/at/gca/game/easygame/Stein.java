@@ -10,7 +10,7 @@ import java.util.Random;
 public class Stein extends SpielObjekt{
 
     private float acceleration = 0.005f;
-    private float speed = 2f;
+    private float speed = 1f;
     private Rectangle shape;
 
     public Stein(int x, int y, Image image) {
@@ -33,11 +33,11 @@ public class Stein extends SpielObjekt{
     @Override
     public void update(int delta) {
         this.speed = (delta * this.acceleration + this.speed);
-        if(this.getY()>768){
+        if(this.getX()< (0- this.getWidth())){
             this.setRandomPosition();
             this.speed = 2;
         }
-        this.setY(this.getY()+(int) this.speed);
+        this.setX(this.getX()-(int) this.speed);
 
         this.shape.setCenterX(this.getX());
         this.shape.setCenterY(this.getY());
@@ -46,10 +46,11 @@ public class Stein extends SpielObjekt{
         Random r = new Random();
         int ry =0;
         int rx =0;
-        rx = r.nextInt(1024-this.getWidth()+1-0)+(this.getWidth()/2);
-        ry= r.nextInt(600+1+this.getHeight())+this.getHeight();
-        this.setY(-ry);
+        rx = r.nextInt(1100+this.getWidth()+1-0)+1024;
+        ry= r.nextInt(700+1+this.getHeight())+600;
+        this.setY(ry);
         this.setX(rx);
+        this.speed = 0.5f;
 
     }
 }
